@@ -103,7 +103,7 @@ class Monitor:
             #print i
             pass
 if __name__ == "__main__":
-    if sys.argv[1] == "m":
+    if len(sys.argv) == 3 and sys.argv[1] == "m":
         server_list_file = sys.argv[2]
         m = Monitor(server_list_file)
         print "%d servers in list." % len(m.server_list)
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         s = Server(sys.argv[1])
         print s.check_state()
     else:
-        server_list_file = "server.list"
+        server_list_file = "servers.list"
         m = Monitor(server_list_file)
         print "%d servers in list." % len(m.server_list)
         m.check_all()
