@@ -102,6 +102,10 @@ class Monitor:
         for i in self.check_all_res_down:
             #print i
             pass
+        results = list()
+        results.extend(self.check_all_res_up)
+        results.extend(self.check_all_res_down)    
+        return results 
 if __name__ == "__main__":
     if len(sys.argv) == 3 and sys.argv[1] == "m":
         server_list_file = sys.argv[2]
