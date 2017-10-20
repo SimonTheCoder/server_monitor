@@ -5,6 +5,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from monitor import Monitor
+import threading
 
 
 def refresh_host(server_list_file = None):
@@ -39,7 +40,12 @@ class Handler:
     def onButtonClick(self, button):
         print "refresh clicked."
         #Gtk.main_quit()
-        refresh_host()
+        list_store = builder.get_object("host_ListStore")
+        list_store.clear()
+        list_store.append([False,"refresh ...","",0])
+        refresh_thread = threading.Thread(target = refresh_host)
+        refresh_thread.setDaemon(True)
+        refresh_thread.start()
     def onCopy1stIP(self, button):
         print "copy to clipboard."
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
