@@ -3,7 +3,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from monitor import Monitor
 
 
@@ -16,6 +16,9 @@ def refresh_host(server_list_file = None):
     list_store.clear() 
     #list_store.append([True,"a","1.1.1.1",3.14159])
     list_store.append([False,"refresh ...","",0])
+
+    #window.queue_draw()
+
     file_chooser = builder.get_object("server_list_file_chooser")
     server_list_file = file_chooser.get_filename()
     if server_list_file is None:
@@ -37,12 +40,16 @@ class Handler:
         print "refresh clicked."
         #Gtk.main_quit()
         refresh_host()
-        
+    def onCopy1stIP(self, button):
+        print "copy to clipboard."
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        list_store = builder.get_object("host_ListStore")
+        clipboard.set_text(list_store[0][2], -1)
 
     def onDeleteWindow(self, *args):
         Gtk.main_quit(*args)
 
-    def onIpEdited(self,arg1, arg2, arg3, arg4):
+    def onIpEdited(self,arg1, arg2, arg3):
         print "ip clicked"
 
     def onServerFileChoosed(self, *args):
