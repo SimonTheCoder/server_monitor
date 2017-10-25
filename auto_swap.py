@@ -53,11 +53,27 @@ class Looper:
                     else:
                         print "starting..."
                     self.popen = subprocess.Popen([self.exec_path,"-c",self.config_path],stderr=subprocess.PIPE)
+                err_times = 0
                 for stdout_line in iter(self.popen.stderr.readline, ""):
                     print "ss:" + stdout_line,
                     if stdout_line.find("ERROR") != -1:
-                        print "Error found. check servers!"
-                        break
+                        err_times = err_times + 1
+                        print "%d Errors found. check servers!" % (err_times)
+                       
+                        if err_times > 10:
+                            print "error times > 10, recheck..."
+                            err_times = 0
+                            break
+
+                        single_server = monitor.Server(fast_ip)
+                        single_server_state = single_server.check_state()
+                        if single_server_state.state >0:
+                            print "server still working."
+                            continue
+                        else:    
+                            print "server down."
+                            print single_server_state
+                            break
             else:
                 print "no available host found!!!!"
 
